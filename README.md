@@ -1,4 +1,4 @@
-## Guide to download files from *SITE* using selenium on linux and make the task automated by running the script at a certain time everyday.
+## Guide to download files from *SITE* using selenium on linux(ubuntu) and make the task automated by running the script at a certain time everyday.
 
 1. Open terminal and download and install Python 3.9 or higher. You can use following commands to do that.
 ```
@@ -9,11 +9,15 @@ sudo apt update
 sudo apt install python3.9
 ```
 2. Install pip by writing following command.
-```python3.9 -m pip install package```
+```
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3.9 get-pip.py
+```
+If you get an error like ```No module named 'distutils.util'``` when you run ```python3.9 get-pip.py```, run ```sudo apt install python3.9-distutils```.
 3. Install selenium.
-```pip install selenium```
+```python3.9 -m pip install selenium```
 4. Install Webdriver Manager.
-```pip install webdriver_manager```
+```python3.9 -m pip install webdriver_manager```
 5. Install git.
 ```sudo apt-get install git```
 6. Download this program repository.
