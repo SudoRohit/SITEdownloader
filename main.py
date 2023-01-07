@@ -71,7 +71,7 @@ wait.until(ec.element_to_be_clickable((By.ID, 'ctl00_ContentPlaceHolder1_RadGrid
 arrows = driver.find_elements(By.XPATH, '//td[1]/input')
 an = len(arrows)
 for i in range(0, an):
-    driver.execute_script("arguments[0].scrollIntoView(true);",arrows[i])
+    driver.execute_script("arguments[0].scrollIntoView(true);", arrows[i])
     sleep(1)
     arrows[i].click()
 
@@ -84,43 +84,59 @@ with open('data/record.csv', 'r') as record:
     for row in rec:
         data.append(row)
 
-with open('data/record.csv', 'a') as addition:
-    add = csv.writer(addition)
-    download = driver.find_elements(By.XPATH, '//td[9]/input')
+with open('data/'+session+'.csv', 'a') as ses:
+    ses = csv.writer(ses)
 
-    n = len(download)
-
-    count = 0
-
-    for i in range(0, n):
+    with open('data/record.csv', 'a') as addition:
+        add = csv.writer(addition)
         download = driver.find_elements(By.XPATH, '//td[9]/input')
-        notification = driver.find_elements(By.XPATH, '//td[7]')
-        noti = notification[i]
-        driver.execute_script("arguments[0].scrollIntoView(true);", noti)
-        name = noti.text
 
-        rsleep()
+        n = len(download)
 
-        if [name] not in data:
-            driver.execute_script("arguments[0].click();", download[i])
+        count = 0
 
-            wait.until(ec.presence_of_element_located((By.XPATH, '//*[@id="dispatch_data"]/div/div[1]/div[2]/object/embed')))
-            pdf = driver.find_element(By.XPATH, '//*[@id="dispatch_data"]/div/div[1]/div[2]/object/embed')
-            src = pdf.get_attribute("src")
+        for i in range(0, n):
+            download = driver.find_elements(By.XPATH, '//td[9]/input')
+            notification = driver.find_elements(By.XPATH, '//td[7]')
+            branch = driver.find_elements(By.XPATH, '//td[3]')
+            semester = driver.find_elements(By.XPATH, '//td[4]')
+            scheme = driver.find_elements(By.XPATH, '//td[5]')
+            rtype = driver.find_elements(By.XPATH, '//td[6]')
+            udate = driver.find_elements(By.XPATH, '//td[8]')
+            noti = notification[i]
+            driver.execute_script("arguments[0].scrollIntoView(true);", noti)
+            br = branch[i].text
+            name = noti.text
+            sem = semester[i].text
+            sch = scheme[i].text
+            rt = rtype[i].text
+            ud = udate[i].text
 
             rsleep()
 
-            decodedData = base64.b64decode(src[29:])
-            pdfFile = open('files/' + str(name) + '.pdf', 'wb')
-            pdfFile.write(decodedData)
-            pdfFile.close()
-            add.writerow([name])
-            rsleep()
-            wait.until(ec.element_to_be_clickable((By.XPATH, '//div[1]/div/div[2]/button'))).click()
-            rsleep()
-            count += 1
-            print('Notification number', name, 'downloaded')
+            if [name] not in data:
+                driver.execute_script("arguments[0].click();", download[i])
 
-    print(count, 'files downloaded')
+                wait.until(ec.presence_of_element_located((By.XPATH, '//*[@id="dispatch_data"]/div/div[1]/div[2]/object/embed')))
+                pdf = driver.find_element(By.XPATH, '//*[@id="dispatch_data"]/div/div[1]/div[2]/object/embed')
+                src = pdf.get_attribute("src")
+
+                rsleep()
+
+                decodedData = base64.b64decode(src[29:])
+                pdfFile = open('files/' + str(name) + '.pdf', 'wb')
+                pdfFile.write(decodedData)
+                pdfFile.close()
+                add.writerow([name])
+                ses.writerow([session, br, sem, sch, rt, name, ud])
+                rsleep()
+                wait.until(ec.element_to_be_clickable((By.XPATH, '//div[1]/div/div[2]/button')))
+                rsleep()
+                driver.find_element(By.XPATH, '//div[1]/div/div[2]/button').click()
+                rsleep()
+                count += 1
+                print('Notification number', name, 'downloaded')
+
+        print(count, 'files downloaded')
 
 driver.close()
