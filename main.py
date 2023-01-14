@@ -21,9 +21,11 @@ config.read('config.ini')
 un = config['login']['Username']
 pw = config['login']['Password']
 loginUrl = config['login']['loginUrl']
-url = config['tabulation']['tabulationUrl']
-session = config['tabulation']['session']
-timeout = int(config['tabulation']['timeout'])
+url = config['result']['resultUrl']
+session = config['result']['session']
+timeout = int(config['result']['timeout'])
+
+print('Result program started')
 
 service = Service(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
@@ -138,5 +140,7 @@ with open('data/'+session+'.csv', 'a') as ses:
                 print('Notification number', name, 'downloaded')
 
         print(count, 'files downloaded')
+
+print('Result program ended')
 
 driver.close()
